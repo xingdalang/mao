@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dl.mao.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.dl.mao.model.User">
+        <id column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="AGE" property="age" jdbcType="INTEGER"/>
+        <result column="PASS" property="pass" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <update id="updateByPrimaryKey" parameterType="com.dl.mao.model.User">
+    update t_user
+    set USER_NAME = #{userName,jdbcType=VARCHAR},
+    AGE = #{age,jdbcType=INTEGER},
+    PASS = #{pass,jdbcType=VARCHAR},
+    CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.dl.mao.model.User">
+        update t_user
+        <set>
+            <if test="userName != null">
+                USER_NAME = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                AGE = #{age,jdbcType=INTEGER},
+            </if>
+            <if test="pass != null">
+                PASS = #{pass,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user
+        where ID = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.dl.mao.model.User">
+        insert into t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="userName != null">
+                USER_NAME,
+            </if>
+            <if test="age != null">
+                AGE,
+            </if>
+            <if test="pass != null">
+                PASS,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=INTEGER},
+            </if>
+            <if test="pass != null">
+                #{pass,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insert" parameterType="com.dl.mao.model.User">
+    insert into t_user (ID, USER_NAME, AGE,
+    PASS, CREATE_TIME, UPDATE_TIME
+    )
+    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER},
+    #{pass,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+    )
+  </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_user
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+</mapper>
