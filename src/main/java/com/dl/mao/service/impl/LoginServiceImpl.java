@@ -5,6 +5,8 @@ import com.dl.mao.dao.UserMapper;
 import com.dl.mao.model.User;
 import com.dl.mao.service.ILoginService;
 import com.dl.mao.util.MD5Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 public class LoginServiceImpl implements ILoginService {
     @Autowired
     UserMapper userMapper;
+
+    private static Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     @Override
     public ResultBean login(User u) {
@@ -31,5 +35,24 @@ public class LoginServiceImpl implements ILoginService {
         return re;
     }
 
-
+    @Override
+    public ResultBean siUp(User user) {
+        ResultBean re = new ResultBean();
+        try {
+            user.setPass(MD5Util.generate(user.getPass()));
+            int insert = userMapper.insert(user);
+            if(insert == 1){
+                re.setCode(0);
+                re.setMsg("注册成功!");
+            }else {
+                re.setCode(1);
+                re.setMsg("系统错误!");
+            }
+        }catch (Exception e){
+            re.setCode(1);
+            re.setMsg("系统错误!");
+            logger.error(e.getMessage());
+        }
+        return re;
+    }
 }

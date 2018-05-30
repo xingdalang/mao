@@ -14,4 +14,11 @@ public interface ILoginService {
      * @return
      */
     ResultBean login(User user);
+
+    /**
+     * 注册
+     * @param user
+     * @return
+     */
+    ResultBean siUp(User user);
 }
