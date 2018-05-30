@@ -1,16 +1,16 @@
 package com.dl.mao.common;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,6 +39,25 @@ public class MyAspect {
         logger.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         logger.info("ARGS : " + JSON.toJSONString(joinPoint.getArgs()));
     }
+
+
+//    @Around("webLog()")
+    public Object around(ProceedingJoinPoint pjp) throws Throwable {
+        Object[] args = pjp.getArgs();
+        String arg = JSON.toJSONString(args[0]);
+        JSONObject object = JSON.parseObject(arg);
+        // 解密
+        String data = JSON.toJSONString(object.get("data"));
+        String sign = JSON.toJSONString(object.get("sign"));
+
+
+
+//        args[0] = ob;
+        Object retVal = pjp.proceed(args);
+        System.out.println("-----object-----");
+        return retVal;
+    }
+
 
     @AfterReturning(pointcut="webLog()", returning="rvt")
     public void doAfter(JoinPoint joinPoint, Object rvt) {

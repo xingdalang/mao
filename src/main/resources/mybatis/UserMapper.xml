@@ -48,16 +48,21 @@
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
         select
-        <include refid="Base_Column_List"/>
+        ID, USER_NAME, AGE, CREATE_TIME, UPDATE_TIME
         from t_user
         where ID = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="selectByNameAndPass" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        ID, USER_NAME, AGE, CREATE_TIME, UPDATE_TIME
         from t_user
-        where USER_NAME = #{name,jdbcType=VARCHAR} AND PASS = #{pass,jdbcType=VARCHAR}
+        where USER_NAME = #{name,jdbcType=VARCHAR}
+
+        <if test="pass != null">
+            AND PASS = #{pass,jdbcType=VARCHAR}
+        </if>
+
     </select>
 
 

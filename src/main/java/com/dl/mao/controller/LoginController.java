@@ -3,6 +3,8 @@ package com.dl.mao.controller;
 import com.dl.mao.common.ResultBean;
 import com.dl.mao.model.User;
 import com.dl.mao.service.ILoginService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,9 @@ public class LoginController extends BaseController{
     @Autowired
     ILoginService loginService;
 
-    @RequestMapping(value = "/login",method = RequestMethod.POST,consumes="application/json")
+    @ApiOperation(value = "登录接口", httpMethod = "POST", response = ResultBean.class)
+//    @RequestMapping(value = "/login",method = RequestMethod.POST,consumes="application/json")
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
     public ResultBean login(@RequestBody User user){
 
@@ -33,7 +37,9 @@ public class LoginController extends BaseController{
         return re;
     }
 
-    @RequestMapping(value = "/signUp",method = RequestMethod.POST,consumes="application/json")
+    @ApiOperation(value = "注册接口", httpMethod = "POST", response = ResultBean.class)
+//    @RequestMapping(value = "/signUp",method = RequestMethod.POST,consumes="application/json")
+    @RequestMapping(value = "/signUp",method = RequestMethod.POST)
     @ResponseBody
     public ResultBean signUp(@RequestBody User user){
 

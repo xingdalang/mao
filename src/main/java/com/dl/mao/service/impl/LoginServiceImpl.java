@@ -40,11 +40,16 @@ public class LoginServiceImpl implements ILoginService {
     @Override
     public ResultBean signUp(User user) {
         ResultBean re = new ResultBean();
+        User u = userMapper.selectByNameAndPass(user.getUserName(), null);
+        if(u != null){
+            re.setCode(1);
+            re.setMsg("用户名重复!");
+            return re;
+        }
         user.setPass(MD5Util.generate(user.getPass()));
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
         try {
-
             int insert = userMapper.insert(user);
             if(insert == 1){
                 re.setCode(0);
