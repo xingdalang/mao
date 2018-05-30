@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * @author xingguanghui
  * @create 2018-05-30 10:13
@@ -36,10 +38,13 @@ public class LoginServiceImpl implements ILoginService {
     }
 
     @Override
-    public ResultBean siUp(User user) {
+    public ResultBean signUp(User user) {
         ResultBean re = new ResultBean();
+        user.setPass(MD5Util.generate(user.getPass()));
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
         try {
-            user.setPass(MD5Util.generate(user.getPass()));
+
             int insert = userMapper.insert(user);
             if(insert == 1){
                 re.setCode(0);

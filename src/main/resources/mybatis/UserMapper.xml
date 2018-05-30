@@ -9,7 +9,9 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
-
+    <sql id="Base_Column_List" >
+        ID, USER_NAME, AGE, PASS, CREATE_TIME, UPDATE_TIME
+    </sql>
     <update id="updateByPrimaryKey" parameterType="com.dl.mao.model.User">
     update t_user
     set USER_NAME = #{userName,jdbcType=VARCHAR},
@@ -50,6 +52,14 @@
         from t_user
         where ID = #{id,jdbcType=BIGINT}
     </select>
+
+    <select id="selectByNameAndPass" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user
+        where USER_NAME = #{name,jdbcType=VARCHAR} AND PASS = #{pass,jdbcType=VARCHAR}
+    </select>
+
 
     <insert id="insertSelective" parameterType="com.dl.mao.model.User">
         insert into t_user

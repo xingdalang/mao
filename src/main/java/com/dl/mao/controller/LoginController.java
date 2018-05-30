@@ -33,11 +33,11 @@ public class LoginController extends BaseController{
         return re;
     }
 
-    @RequestMapping(value = "/siup",method = RequestMethod.POST,consumes="application/json")
+    @RequestMapping(value = "/signUp",method = RequestMethod.POST,consumes="application/json")
     @ResponseBody
-    public ResultBean siUp(@RequestBody User user){
+    public ResultBean signUp(@RequestBody User user){
 
-        ResultBean re = loginService.siUp(user);
+        ResultBean re = loginService.signUp(user);
 
         return re;
     }
