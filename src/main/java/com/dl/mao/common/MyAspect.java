@@ -2,15 +2,16 @@ package com.dl.mao.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.dl.mao.util.RSAUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 @Component
 public class MyAspect {
+
+    @Autowired
+    private SystemConfiguration systemConfiguration;
+
     private Logger logger = LoggerFactory.getLogger(MyAspect.class);
 
     @Pointcut("execution(public * com.dl.mao.controller..*.*(..))")
@@ -41,7 +46,7 @@ public class MyAspect {
     }
 
 
-//    @Around("webLog()")
+    @Around("webLog()")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         Object[] args = pjp.getArgs();
         String arg = JSON.toJSONString(args[0]);
@@ -50,11 +55,18 @@ public class MyAspect {
         String data = JSON.toJSONString(object.get("data"));
         String sign = JSON.toJSONString(object.get("sign"));
 
+    /*    String decrypt = RSAUtils.decrypt(data, systemConfiguration.getRsaPrivateKey());
+        boolean checkSign = RSAUtils.doCheck(data, sign, systemConfiguration.getRsaPrivateKey());
+        */
+        //
+        JSONObject de = JSON.parseObject(data);
 
+        RequestBean request = new RequestBean();
+        request.setData(data);
+        request.setSign(sign);
 
-//        args[0] = ob;
+        args[0] = request;
         Object retVal = pjp.proceed(args);
-        System.out.println("-----object-----");
         return retVal;
     }
 

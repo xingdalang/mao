@@ -1,5 +1,8 @@
 package com.dl.mao.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.dl.mao.common.RequestBean;
 import com.dl.mao.common.ResultBean;
 import com.dl.mao.model.User;
 import com.dl.mao.service.ILoginService;
@@ -30,8 +33,9 @@ public class LoginController extends BaseController{
 //    @RequestMapping(value = "/login",method = RequestMethod.POST,consumes="application/json")
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
-    public ResultBean login(@RequestBody User user){
-
+    public ResultBean login(@RequestBody RequestBean bean){
+        String data = bean.getData();
+        User user = JSONObject.parseObject(data, User.class);
         ResultBean re = loginService.login(user);
 
         return re;

@@ -1,5 +1,6 @@
 package com.dl.mao.util;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -25,7 +26,6 @@ public class RSAUtils {
     private static Map<Integer,KeyPair> KeyList = new HashMap<Integer,KeyPair>();
 
     private static Cipher cipher;
-
     /**
      * 生成密钥对
      * @param index 密钥索引
@@ -41,9 +41,36 @@ public class RSAUtils {
         
         /** 生成密钥对 */
     	KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        
+        System.out.println(JSON.toJSONString(keyPair.getPrivate()));
+        System.out.println(JSON.toJSONString(keyPair.getPublic()));
         KeyList.put(index, keyPair);
     }
+
+    public static void main(String[] args) {
+        try {
+            generateKeyPair();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static KeyPair generateKeyPair() throws Exception {
+        try {
+            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA",
+                    new org.bouncycastle.jce.provider.BouncyCastleProvider());
+            final int KEY_SIZE = 1024;// 没什么好说的了，这个值关系到块加密的大小，可以更改，但是不要太大，否则效率会低
+            keyPairGen.initialize(KEY_SIZE, new SecureRandom());
+            KeyPair keyPair = keyPairGen.generateKeyPair();
+
+            System.out.println(JSON.toJSONString(keyPair.getPrivate()));
+            System.out.println(JSON.toJSONString(keyPair.getPublic()));
+
+//            saveKeyPair(keyPair);
+            return keyPair;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
     
     private static String getModulus(Integer index){
     	RSAPublicKey rsaPublicKey = (RSAPublicKey) KeyList.get(index).getPublic();
@@ -74,7 +101,8 @@ public class RSAUtils {
     	return result;
     	
     }
-    
+
+
     /**
      * 加密方法
      * @param source 源数据
@@ -99,6 +127,17 @@ public class RSAUtils {
        
         return Base64.encode(b1);
     }
+    public static String encrypt(String source, String publicKeyStr){
+        try {
+            PublicKey publicKey = getPublicKey(publicKeyStr);
+            String encrypt = encrypt(source, publicKey, null);
+            return encrypt;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     
     /**
      * 解密算法
@@ -134,7 +173,7 @@ public class RSAUtils {
      * @param encode 字符集编码 
      * @return 签名值 
      */  
-     public static String sign(String content, RSAPrivateKey privateKey, String encode, String algorithm)  
+     public static String sign(String content, PrivateKey privateKey, String encode, String algorithm)
      {  
          try   
          {
@@ -150,18 +189,40 @@ public class RSAUtils {
          }  
          return "";  
      }
-     
-     /**
+    public static String sign(String content, String privateKeyStr){
+        try {
+            PrivateKey privateKey = getPrivateKey(content);
+            String sign = sign(content, privateKey, "utf-8", ALGORITHM);
+            return sign;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static boolean doCheck(String content, String sign, String publicKeyStr){
+        try {
+            PublicKey publicKey = getPublicKey(publicKeyStr);
+            boolean b = doCheck(content, sign, publicKey,ALGORITHM);
+            return b;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
       * 验签
       * @param content
       * @param sign
       * @param publicKey
       * @return
       */
-     public static boolean doCheck(String content, String sign, RSAPublicKey publicKey, String algorithm)  
+     public static boolean doCheck(String content, String sign, PublicKey publicKey, String algorithm)
      {  
          try   
-         {  
+         {
              Signature signature = Signature.getInstance(algorithm);  
              signature.initVerify(publicKey);  
              signature.update(content.getBytes());  
