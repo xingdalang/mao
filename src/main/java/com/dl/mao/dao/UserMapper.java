@@ -1,7 +1,10 @@
 package com.dl.mao.dao;
 
 import com.dl.mao.model.User;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+@Mapper
 public interface UserMapper{
 
 //    int deleteByPrimaryKey(Long id);
@@ -17,4 +20,6 @@ public interface UserMapper{
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    User selectByNameAndPass(@Param("name") String name,@Param("pass") String pass);
 }

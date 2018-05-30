@@ -2,6 +2,8 @@ package com.dl.mao.controller;
 
 import com.dl.mao.common.ResultBean;
 import com.dl.mao.model.User;
+import com.dl.mao.service.ILoginService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +16,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
  **/
 @Controller
 public class LoginController extends BaseController{
+    @Autowired
+    ILoginService loginService;
 
     @RequestMapping(value = "/login",method = RequestMethod.POST,consumes="application/json")
     @ResponseBody
     public ResultBean login(@RequestBody User user){
 
+        ResultBean re = loginService.login(user);
         return null;
     }
 }
