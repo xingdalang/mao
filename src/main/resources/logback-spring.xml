@@ -4,7 +4,7 @@
 
     <logger name="org.springframework.web" level="error"/>
     <logger name="com.alibaba.druid" level="error"/>
-    <property name="LOG_HOME" value="/data/mao/logs/signUpSignIn" />
+    <property name="LOG_HOME" value="/home/dl/data/mao/logs/signUpSignIn" />
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
